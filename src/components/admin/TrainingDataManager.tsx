@@ -33,6 +33,7 @@ interface TrainingData {
   usageCount: number;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface TrainingDataManagerProps {}
 
 export default function TrainingDataManager({}: TrainingDataManagerProps) {

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn, formatTimestamp, getSeverityColor } from '@/lib/utils';
-import { MessageCircle, User, AlertTriangle, Shield } from 'lucide-react';
+import { User, AlertTriangle, Shield } from 'lucide-react';
 
 interface ChatMessageProps {
   message: {

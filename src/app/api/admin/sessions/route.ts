@@ -23,8 +23,8 @@ export async function GET(request: NextRequest) {
     // Filter by date range if provided
     if (dateFrom || dateTo) {
       query.createdAt = {};
-      if (dateFrom) query.createdAt.$gte = new Date(dateFrom);
-      if (dateTo) query.createdAt.$lte = new Date(dateTo);
+      if (dateFrom) (query.createdAt as Record<string, unknown>).$gte = new Date(dateFrom);
+      if (dateTo) (query.createdAt as Record<string, unknown>).$lte = new Date(dateTo);
     }
     
     const sessions = await ChatSession.find(query)

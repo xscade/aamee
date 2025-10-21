@@ -82,7 +82,7 @@ export class VoicePlayer {
   }
 
   isPlaying(): boolean {
-    return this.currentAudio && !this.currentAudio.paused;
+    return !!(this.currentAudio && !this.currentAudio.paused);
   }
 }
 
@@ -151,7 +151,7 @@ export class TextToSpeech {
 
 // Speech-to-Text using Web Speech API
 export class SpeechToText {
-  private recognition: SpeechRecognition | null = null;
+  private recognition: any = null;
   private isListening: boolean = false;
 
   constructor() {
@@ -181,13 +181,13 @@ export class SpeechToText {
         this.isListening = true;
       };
 
-      this.recognition.onresult = (event) => {
+      this.recognition.onresult = (event: any) => {
         const transcript = event.results[0][0].transcript;
         this.isListening = false;
         resolve(transcript);
       };
 
-      this.recognition.onerror = (event) => {
+      this.recognition.onerror = (event: any) => {
         this.isListening = false;
         reject(new Error(`Speech recognition error: ${event.error}`));
       };

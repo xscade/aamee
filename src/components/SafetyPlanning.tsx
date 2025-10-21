@@ -53,11 +53,11 @@ export default function SafetyPlanning({ onClose }: SafetyPlanningProps) {
           <ul className="space-y-2 text-gray-600">
             <li className="flex items-start gap-2">
               <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-              <span>Trusted friend's or family member's house</span>
+              <span>Trusted friend&apos;s or family member&apos;s house</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
-              <span>Local women's shelter</span>
+              <span>Local women&apos;s shelter</span>
             </li>
             <li className="flex items-start gap-2">
               <span className="w-2 h-2 bg-primary rounded-full mt-2 flex-shrink-0" />
@@ -180,7 +180,7 @@ ${safetySteps.map((step, index) => `
 ${index + 1}. ${step.title}
 ${step.content.props.children[1] ? 
   (Array.isArray(step.content.props.children[1]) ? 
-    step.content.props.children[1].map((item: any) => item.props.children).join('\n') :
+    step.content.props.children[1].map((item: { props: { children: string } }) => item.props.children).join('\n') :
     step.content.props.children[1].props.children
   ) : 
   step.content.props.children

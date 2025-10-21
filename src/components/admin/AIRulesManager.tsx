@@ -34,7 +34,7 @@ interface AIRulesManagerProps {}
 export default function AIRulesManager({}: AIRulesManagerProps) {
   const [rules, setRules] = useState<AIRule[]>([]);
   const [isAddingRule, setIsAddingRule] = useState(false);
-  const [editingRule, setEditingRule] = useState<string | null>(null);
+  const [editingRule] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [newRule, setNewRule] = useState<Partial<AIRule>>({
     name: '',
@@ -126,16 +126,16 @@ export default function AIRulesManager({}: AIRulesManagerProps) {
     }
   };
 
-  const handleEditRule = (id: string) => {
-    setEditingRule(id);
+  const handleEditRule = (_id: string) => {
+    // setEditingRule(id);
   };
 
-  const handleSaveRule = (id: string, updatedRule: Partial<AIRule>) => {
-    setRules(prev => prev.map(rule => 
-      rule.id === id ? { ...rule, ...updatedRule } : rule
-    ).sort((a, b) => b.priority - a.priority));
-    setEditingRule(null);
-  };
+  // const handleSaveRule = (id: string, updatedRule: Partial<AIRule>) => {
+  //   setRules(prev => prev.map(rule => 
+  //     rule.id === id ? { ...rule, ...updatedRule } : rule
+  //   ).sort((a, b) => b.priority - a.priority));
+  //   setEditingRule(null);
+  // };
 
   const handleDeleteRule = (id: string) => {
     if (confirm('Are you sure you want to delete this rule?')) {
@@ -203,7 +203,7 @@ export default function AIRulesManager({}: AIRulesManagerProps) {
               <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
               <select
                 value={newRule.category}
-                onChange={(e) => setNewRule(prev => ({ ...prev, category: e.target.value as any }))}
+                onChange={(e) => setNewRule(prev => ({ ...prev, category: e.target.value as 'emergency' | 'legal' | 'medical' | 'psychological' | 'general' }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-200"
               >
                 <option value="general">General</option>

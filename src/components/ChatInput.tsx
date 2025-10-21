@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { Mic, MicOff, Send, Volume2, VolumeX } from 'lucide-react';
 // Voice functionality temporarily disabled for client-side compatibility
 
@@ -19,13 +18,12 @@ interface ChatInputProps {
 
 export default function ChatInput({
   onSendMessage,
-  onVoiceInput,
+  onVoiceInput: _onVoiceInput,
   onVoiceOutput,
   isVoiceRecording,
   isVoiceEnabled,
   disabled = false,
-  placeholder = "Type your message here...",
-  language = 'en'
+  placeholder = "Type your message here..."
 }: ChatInputProps) {
   const [message, setMessage] = useState('');
   const [isComposing, setIsComposing] = useState(false);

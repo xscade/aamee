@@ -5,8 +5,8 @@ import React, { useState, useEffect, useRef } from 'react';
 // Extend Window interface for Speech Recognition
 declare global {
   interface Window {
-    SpeechRecognition: typeof SpeechRecognition;
-    webkitSpeechRecognition: typeof SpeechRecognition;
+    SpeechRecognition: any;
+    webkitSpeechRecognition: any;
   }
 }
 import { Button } from '@/components/ui/Button';
@@ -14,7 +14,7 @@ import { Button } from '@/components/ui/Button';
 import { Settings, Shield, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { generateSessionId, detectSeverity } from '@/lib/utils';
 import { IChatMessage } from '@/models/ChatSession';
-import { useTranslation } from '@/lib/translations';
+// import { useTranslation } from '@/lib/translations'; // Unused
 import { cn } from '@/lib/utils';
 
 interface ChatBotProps {
@@ -34,7 +34,7 @@ export default function ChatBot({ className }: ChatBotProps) {
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const recognitionRef = useRef<SpeechRecognition | null>(null);
+  const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
       // const t = useTranslation(language); // Unused variable
 
@@ -62,10 +62,10 @@ export default function ChatBot({ className }: ChatBotProps) {
         recognitionRef.current.interimResults = false;
         recognitionRef.current.lang = language === 'hi' ? 'hi-IN' : 'en-US';
 
-            recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+            recognitionRef.current.onresult = (event: any) => {
               const transcript = Array.from(event.results)
-                .map((result: SpeechRecognitionResult) => result[0])
-                .map((result: SpeechRecognitionAlternative) => result.transcript)
+                .map((result: any) => result[0])
+                .map((result: any) => result.transcript)
                 .join('');
           
           if (transcript.trim()) {
@@ -74,7 +74,7 @@ export default function ChatBot({ className }: ChatBotProps) {
           setIsVoiceRecording(false);
         };
 
-            recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
+            recognitionRef.current.onerror = (event: any) => {
           console.error('Speech recognition error:', event.error);
           setIsVoiceRecording(false);
         };

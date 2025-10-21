@@ -4,7 +4,7 @@ export interface IAdminConfig extends Document {
   configType: 'rules' | 'tones' | 'training';
   name: string;
   description?: string;
-  content: any;
+  content: Record<string, unknown>;
   isActive: boolean;
   priority?: number;
   tags?: string[];

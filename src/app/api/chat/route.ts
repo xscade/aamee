@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
 
     // Generate AI response
     const conversationHistory = contextRetention 
-      ? session.messages.slice(-10).map(msg => ({ role: msg.role, content: msg.content }))
+      ? session.messages.slice(-10).map((msg: { role: string; content: string }) => ({ role: msg.role, content: msg.content }))
       : [];
 
     const aiResponse = await generateChatResponse(message, conversationHistory, language);

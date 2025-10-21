@@ -13,7 +13,7 @@ interface WelcomeScreenProps {
 export default function WelcomeScreen({ onStartChat }: WelcomeScreenProps) {
   const [showMore, setShowMore] = useState(false);
   const [language, setLanguage] = useState('en');
-  const t = useTranslation(language);
+  // const t = useTranslation(language); // Unused
 
   return (
     <div className="min-h-screen bg-fog flex flex-col">

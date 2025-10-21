@@ -7,7 +7,7 @@ import EmergencyButton from './EmergencyButton';
 import SafetyPlanning from './SafetyPlanning';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Settings, Shield, Globe, MessageCircle } from 'lucide-react';
+import { Settings, Shield } from 'lucide-react';
 import { generateSessionId, detectSeverity } from '@/lib/utils';
 import { IChatMessage } from '@/models/ChatSession';
 
@@ -24,7 +24,7 @@ export default function ChatInterface({ initialMessages = [], sessionId }: ChatI
   const [showSettings, setShowSettings] = useState(false);
   const [contextRetention, setContextRetention] = useState(true);
   const [language, setLanguage] = useState('en');
-  const [currentSessionId, setCurrentSessionId] = useState(sessionId || generateSessionId());
+  const [currentSessionId] = useState(sessionId || generateSessionId());
   const [showSafetyPlanning, setShowSafetyPlanning] = useState(false);
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -55,7 +55,7 @@ Everything we discuss is completely confidential. How can I help you today?`,
       };
       setMessages([welcomeMessage]);
     }
-  }, []);
+  }, [messages.length]);
 
   // Voice functionality temporarily disabled
 
@@ -122,7 +122,7 @@ Everything we discuss is completely confidential. How can I help you today?`,
     // TODO: Implement actual voice recording functionality
   };
 
-  const handleVoiceOutput = async (text: string) => {
+  const handleVoiceOutput = async (_text: string) => {
     setIsVoiceEnabled(!isVoiceEnabled);
   };
 

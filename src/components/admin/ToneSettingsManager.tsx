@@ -13,8 +13,7 @@ import {
   MessageSquare,
   Heart,
   Shield,
-  AlertTriangle,
-  Users
+  AlertTriangle
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -29,6 +28,7 @@ interface ToneSetting {
   severity: 'low' | 'medium' | 'high' | 'emergency';
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface ToneSettingsManagerProps {}
 
 export default function ToneSettingsManager({}: ToneSettingsManagerProps) {
