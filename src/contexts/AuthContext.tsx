@@ -65,10 +65,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const login = (newToken: string, newUser: User) => {
     console.log('AuthContext: Setting user state:', newUser);
-    setToken(newToken);
-    setUser(newUser);
+    
+    // Set localStorage first
     localStorage.setItem('adminToken', newToken);
     localStorage.setItem('adminUser', JSON.stringify(newUser));
+    
+    // Then update state
+    setToken(newToken);
+    setUser(newUser);
+    
     console.log('AuthContext: User state set successfully');
   };
 

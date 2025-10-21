@@ -44,10 +44,8 @@ export default function AdminLogin() {
         
         console.log('User state set, redirecting to admin...');
         
-        // Add a small delay to ensure state is updated
-        setTimeout(() => {
-          router.push('/admin');
-        }, 100);
+        // Redirect immediately - the AuthContext will handle state
+        router.push('/admin');
       } else {
         console.error('Login failed:', data.error);
         setError(data.error || 'Login failed');

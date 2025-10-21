@@ -17,9 +17,22 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
     console.log('ProtectedRoute: isLoading =', isLoading, 'user =', user);
     
     if (!isLoading) {
+      // Check if user exists in AuthContext
       if (!user) {
-        console.log('ProtectedRoute: No user, redirecting to login');
-        router.push('/admin/login');
+        console.log('ProtectedRoute: No user in context, checking localStorage...');
+        
+        // Check localStorage as fallback
+        const storedToken = localStorage.getItem('adminToken');
+        const storedUser = localStorage.getItem('adminUser');
+        
+        if (!storedToken || !storedUser) {
+          console.log('ProtectedRoute: No stored auth data, redirecting to login');
+          router.push('/admin/login');
+          return;
+        }
+        
+        // If we have stored data but no user in context, wait a bit more
+        console.log('ProtectedRoute: Found stored auth data, waiting for context to update...');
         return;
       }
 
