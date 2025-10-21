@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const severity = searchParams.get('severity');
     const location = searchParams.get('location');
 
-    let query: any = { isVerified: true };
+    const query: Record<string, unknown> = { isVerified: true };
 
     if (category) {
       query.category = category;

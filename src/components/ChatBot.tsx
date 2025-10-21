@@ -5,12 +5,12 @@ import React, { useState, useEffect, useRef } from 'react';
 // Extend Window interface for Speech Recognition
 declare global {
   interface Window {
-    SpeechRecognition: any;
-    webkitSpeechRecognition: any;
+    SpeechRecognition: typeof SpeechRecognition;
+    webkitSpeechRecognition: typeof SpeechRecognition;
   }
 }
 import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
+// import { Card } from '@/components/ui/Card'; // Unused import
 import { Settings, Shield, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { generateSessionId, detectSeverity } from '@/lib/utils';
 import { IChatMessage } from '@/models/ChatSession';
@@ -34,9 +34,9 @@ export default function ChatBot({ className }: ChatBotProps) {
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
-  const recognitionRef = useRef<any>(null);
+  const recognitionRef = useRef<SpeechRecognition | null>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
-  const t = useTranslation(language);
+      // const t = useTranslation(language); // Unused variable
 
   // Generate session ID only on client side to prevent hydration mismatch
   useEffect(() => {
@@ -62,11 +62,11 @@ export default function ChatBot({ className }: ChatBotProps) {
         recognitionRef.current.interimResults = false;
         recognitionRef.current.lang = language === 'hi' ? 'hi-IN' : 'en-US';
 
-        recognitionRef.current.onresult = (event: any) => {
-          const transcript = Array.from(event.results)
-            .map((result: any) => result[0])
-            .map((result: any) => result.transcript)
-            .join('');
+            recognitionRef.current.onresult = (event: SpeechRecognitionEvent) => {
+              const transcript = Array.from(event.results)
+                .map((result: SpeechRecognitionResult) => result[0])
+                .map((result: SpeechRecognitionAlternative) => result.transcript)
+                .join('');
           
           if (transcript.trim()) {
             setInput(transcript.trim());
@@ -74,7 +74,7 @@ export default function ChatBot({ className }: ChatBotProps) {
           setIsVoiceRecording(false);
         };
 
-        recognitionRef.current.onerror = (event: any) => {
+            recognitionRef.current.onerror = (event: SpeechRecognitionErrorEvent) => {
           console.error('Speech recognition error:', event.error);
           setIsVoiceRecording(false);
         };
@@ -113,12 +113,12 @@ Everything we discuss is completely confidential. How can I help you today?`,
     }
   }, [messages.length]);
 
-  // Speak welcome message if voice is enabled and it's the first message
-  useEffect(() => {
-    if (messages.length === 1 && isVoiceEnabled && messages[0]?.role === 'assistant') {
-      speakText(messages[0].content);
-    }
-  }, [messages.length, isVoiceEnabled]);
+      // Speak welcome message if voice is enabled and it's the first message
+      useEffect(() => {
+        if (messages.length === 1 && isVoiceEnabled && messages[0]?.role === 'assistant') {
+          speakText(messages[0].content);
+        }
+      }, [messages.length, isVoiceEnabled, messages]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

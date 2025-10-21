@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
-import TrainingData, { ITrainingData } from '@/models/TrainingData';
+import TrainingData from '@/models/TrainingData';
 
 export async function GET(request: NextRequest) {
   try {
@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const isApproved = searchParams.get('approved');
     const language = searchParams.get('language');
     
-    const query: any = {};
+    const query: Record<string, unknown> = {};
     if (category && category !== 'all') query.category = category;
     if (isApproved && isApproved !== 'all') query.isApproved = isApproved === 'true';
     if (language) query.language = language;

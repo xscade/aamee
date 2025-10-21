@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
-import ChatSession, { IChatSession } from '@/models/ChatSession';
+import ChatSession from '@/models/ChatSession';
 
 export async function GET(request: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
     const dateFrom = searchParams.get('dateFrom');
     const dateTo = searchParams.get('dateTo');
     
-    const query: any = {};
+    const query: Record<string, unknown> = {};
     
     // Filter by severity if provided
     if (severity && severity !== 'all') {

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
-import AdminConfig, { IAdminConfig } from '@/models/AdminConfig';
+import AdminConfig from '@/models/AdminConfig';
 
 export async function GET(request: NextRequest) {
   try {

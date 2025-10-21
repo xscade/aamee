@@ -28,6 +28,7 @@ interface AIRule {
   category: 'emergency' | 'legal' | 'medical' | 'psychological' | 'general';
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface AIRulesManagerProps {}
 
 export default function AIRulesManager({}: AIRulesManagerProps) {
@@ -57,7 +58,7 @@ export default function AIRulesManager({}: AIRulesManagerProps) {
       const data = await response.json();
       
       if (data.success) {
-        const formattedRules: AIRule[] = data.data.map((config: any) => ({
+        const formattedRules: AIRule[] = data.data.map((config: { _id: string; name: string; description: string; content: { condition: string; action: string; category: string }; priority: number; isActive: boolean }) => ({
           id: config._id,
           name: config.name,
           description: config.description || '',

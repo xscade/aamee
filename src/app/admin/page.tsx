@@ -18,6 +18,7 @@ import AIRulesManager from '@/components/admin/AIRulesManager';
 import ToneSettingsManager from '@/components/admin/ToneSettingsManager';
 import TrainingDataManager from '@/components/admin/TrainingDataManager';
 
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface AdminDashboardProps {}
 
 export default function AdminDashboard({}: AdminDashboardProps) {
@@ -63,7 +64,7 @@ export default function AdminDashboard({}: AdminDashboardProps) {
       
       // Fetch resources
       const resourcesResponse = await fetch('/api/resources');
-      const resourcesData = await resourcesResponse.json();
+      await resourcesResponse.json(); // resourcesData not used currently
       
       if (analyticsData.success && configData.success && trainingData.success) {
         const newStats = [
@@ -75,7 +76,7 @@ export default function AdminDashboard({}: AdminDashboardProps) {
           },
           { 
             label: 'Active Rules', 
-            value: configData.data.filter((config: any) => config.isActive).length.toString(), 
+            value: configData.data.filter((config: { isActive: boolean }) => config.isActive).length.toString(), 
             change: '+0', 
             color: 'text-green-600' 
           },
