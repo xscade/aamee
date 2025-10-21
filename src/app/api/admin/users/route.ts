@@ -5,25 +5,32 @@ import { requireAuth } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
+    console.log('GET /api/admin/users - Starting request');
+    
     const user = await requireAuth(['admin', 'manager'])(request);
     
     if (!user) {
+      console.log('GET /api/admin/users - Unauthorized');
       return NextResponse.json(
         { error: 'Unauthorized' },
         { status: 401 }
       );
     }
 
+    console.log('GET /api/admin/users - User authenticated:', user.email);
+
     await connectDB();
 
     const users = await User.find({}).select('-password').sort({ createdAt: -1 });
+
+    console.log('GET /api/admin/users - Found users:', users.length);
 
     return NextResponse.json({ users });
 
   } catch (error) {
     console.error('Get users error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }
@@ -31,16 +38,23 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('POST /api/admin/users - Starting request');
+    
     const user = await requireAuth(['admin'])(request);
     
     if (!user) {
+      console.log('POST /api/admin/users - Unauthorized');
       return NextResponse.json(
         { error: 'Unauthorized - Admin access required' },
         { status: 401 }
       );
     }
 
+    console.log('POST /api/admin/users - User authenticated:', user.email);
+
     const { email, password, role } = await request.json();
+
+    console.log('POST /api/admin/users - Creating user:', { email, role });
 
     if (!email || !password || !role) {
       return NextResponse.json(
@@ -75,7 +89,10 @@ export async function POST(request: NextRequest) {
       role
     });
 
+    console.log('POST /api/admin/users - Saving user to database');
     await newUser.save();
+
+    console.log('POST /api/admin/users - User created successfully:', newUser._id);
 
     return NextResponse.json({
       success: true,
@@ -91,7 +108,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Create user error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Internal server error', details: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     );
   }

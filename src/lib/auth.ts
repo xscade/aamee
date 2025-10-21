@@ -15,11 +15,13 @@ export const authenticateUser = async (request: NextRequest): Promise<Authentica
     const token = extractTokenFromHeader(authHeader);
     
     if (!token) {
+      console.log('No token found in request');
       return null;
     }
 
     const payload = verifyToken(token);
     if (!payload) {
+      console.log('Invalid or expired token');
       return null;
     }
 
@@ -27,6 +29,7 @@ export const authenticateUser = async (request: NextRequest): Promise<Authentica
     const user = await User.findById(payload.userId).select('-password');
     
     if (!user || !user.isActive) {
+      console.log('User not found or inactive:', payload.userId);
       return null;
     }
 
