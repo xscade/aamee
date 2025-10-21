@@ -1,0 +1,211 @@
+# AME AI Bot - Cursor Rules
+
+## Project Context
+This is a confidential AI-powered chatbot for AME, a non-profit supporting domestic violence survivors. The application provides 24/7 support, immediate information, guidance, and connections to essential services while maintaining privacy and autonomy.
+
+## Tech Stack
+- Next.js 15 with App Router
+- React 19 with TypeScript
+- MongoDB Atlas (Cloud database)
+- Tailwind CSS + Shadcn UI
+- JWT authentication with bcrypt
+- OpenAI API for AI responses
+- Web Speech API for voice features
+
+## Critical Rules
+
+### 1. ALWAYS Test Builds Locally
+```bash
+# BEFORE any commit or push, run:
+npm run build
+```
+- Never push code that fails to build
+- Fix all TypeScript and ESLint errors
+- Test in development mode first
+
+### 2. Environment Variables
+- NEVER commit `.env.local` or `.env` files
+- Always use environment variables for sensitive data
+- Load environment variables in scripts using dotenv
+- Use strong JWT secrets (minimum 32 characters)
+
+### 3. Database Connection
+- We use MongoDB Atlas (cloud), NOT local MongoDB
+- Always verify MONGODB_URI is properly configured
+- Test database connections before deployment
+
+### 4. TypeScript Best Practices
+- Use proper types, avoid `any` when possible
+- Define interfaces for API responses
+- Handle async params correctly in Next.js 15 API routes
+- Use type assertions (`!`) carefully and only when necessary
+
+### 5. Authentication Security
+- Use bcrypt with salt rounds ≥ 12 for passwords
+- Implement proper JWT token handling
+- Validate all user inputs
+- Never hardcode secrets or passwords
+
+### 6. API Route Patterns
+```typescript
+// Correct Next.js 15 pattern for dynamic routes
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  // Use id...
+}
+```
+
+### 7. Error Handling
+- Always wrap async operations in try-catch
+- Provide meaningful error messages
+- Log errors for debugging
+- Handle network failures gracefully
+
+## Code Style Guidelines
+
+### TypeScript
+- Use strict typing
+- Define interfaces for complex objects
+- Use proper return types for functions
+- Handle null/undefined cases explicitly
+
+### React Components
+- Use functional components with hooks
+- Implement proper prop types
+- Use TypeScript for component props
+- Handle loading and error states
+
+### API Routes
+- Validate request parameters
+- Use proper HTTP status codes
+- Implement authentication checks
+- Return consistent response formats
+
+### Database Models
+- Define proper schemas with validation
+- Use TypeScript interfaces for models
+- Implement proper error handling
+- Use Mongoose best practices
+
+## Common Mistakes to Avoid
+
+### ❌ DON'T:
+- Push code without testing builds
+- Use local MongoDB when cloud is configured
+- Hardcode secrets or API keys
+- Ignore TypeScript errors
+- Use `any` types unnecessarily
+- Skip environment variable loading in scripts
+- Forget to handle async operations properly
+
+### ✅ DO:
+- Test builds locally before pushing
+- Use environment variables for all secrets
+- Implement proper error handling
+- Use TypeScript types correctly
+- Follow Next.js 15 patterns
+- Load environment variables in scripts
+- Handle authentication properly
+
+## File Organization
+```
+src/
+├── app/           # Next.js App Router pages
+├── components/    # Reusable React components
+├── contexts/      # React contexts
+├── lib/           # Utility functions and configurations
+├── models/        # MongoDB Mongoose models
+└── types/         # TypeScript type definitions
+```
+
+## Authentication Flow
+1. User logs in at `/admin/login`
+2. JWT token stored in localStorage
+3. Token sent with API requests
+4. Server validates token and user permissions
+5. Role-based access control (admin, manager, viewer)
+
+## Database Models
+- `User`: Authentication and user management
+- `ChatSession`: Chat conversation storage
+- `Resource`: Emergency resources and helplines
+- `AdminConfig`: AI rules and configurations
+- `TrainingData`: AI training samples
+
+## Environment Variables Required
+```bash
+MONGODB_URI=mongodb+srv://...
+OPENAI_API_KEY=sk-proj-...
+JWT_SECRET=your-super-secret-jwt-key
+NEXT_PUBLIC_APP_URL=http://localhost:3000
+```
+
+## Deployment Checklist
+- [ ] All environment variables configured
+- [ ] Build passes without errors
+- [ ] Database connection tested
+- [ ] Admin user created
+- [ ] Authentication working
+- [ ] Security headers configured
+
+## Security Considerations
+- Use HTTPS in production
+- Implement proper CORS settings
+- Validate all inputs
+- Use strong passwords and secrets
+- Regular security audits
+- Monitor for vulnerabilities
+
+## Performance Guidelines
+- Optimize images and assets
+- Use proper caching strategies
+- Minimize bundle size
+- Implement lazy loading
+- Monitor Core Web Vitals
+
+## Debugging Tips
+- Check browser console for errors
+- Monitor network requests
+- Use proper logging
+- Test API endpoints independently
+- Verify environment variables
+
+## Remember
+- This is a sensitive application for domestic violence survivors
+- Privacy and security are paramount
+- Test everything thoroughly
+- Follow best practices religiously
+- Document any complex logic
+- Keep dependencies updated
+
+## Quick Commands
+```bash
+# Development
+npm run dev
+
+# Build test
+npm run build
+
+# Create admin user
+npm run create-admin
+
+# Seed database
+npm run seed
+
+# Linting
+npm run lint
+```
+
+## Emergency Procedures
+If you encounter critical issues:
+1. Check environment variables first
+2. Verify database connection
+3. Test build locally
+4. Check authentication flow
+5. Review error logs
+6. Rollback if necessary
+
+Always prioritize user safety and data security in this sensitive application.

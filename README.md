@@ -16,10 +16,17 @@ A confidential, AI-powered chatbot designed to provide 24/7 support for domestic
 ## Tech Stack
 
 - **Frontend**: Next.js 15 with App Router, TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes, MongoDB with Mongoose
+- **Backend**: Next.js API Routes, MongoDB Atlas (Cloud)
 - **AI**: OpenAI GPT-4 for intelligent responses
+- **Authentication**: JWT tokens with bcrypt password hashing
+- **Voice**: Web Speech API for speech-to-text and text-to-speech
 - **UI Components**: Custom components with Radix UI primitives
 - **Styling**: Tailwind CSS with custom color scheme
+
+## Documentation
+
+- **[DEVELOPER.md](./DEVELOPER.md)** - Comprehensive developer guide with common mistakes and solutions
+- **[.cursorrules](./.cursorrules)** - Cursor AI rules for consistent development
 
 ## Setup Instructions
 
