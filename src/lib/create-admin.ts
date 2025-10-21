@@ -1,5 +1,9 @@
+import dotenv from 'dotenv';
 import connectDB from './mongodb';
 import User from '@/models/User';
+
+// Load environment variables
+dotenv.config({ path: '.env.local' });
 
 export async function createAdminUser() {
   try {
