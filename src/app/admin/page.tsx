@@ -11,17 +11,23 @@ import {
   BarChart3,
   Shield,
   Users,
-  Activity
+  Activity,
+  LogOut,
+  UserCog
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AIRulesManager from '@/components/admin/AIRulesManager';
 import ToneSettingsManager from '@/components/admin/ToneSettingsManager';
 import TrainingDataManager from '@/components/admin/TrainingDataManager';
+import UserManager from '@/components/admin/UserManager';
+import ProtectedRoute from '@/components/admin/ProtectedRoute';
+import { useAuth } from '@/contexts/AuthContext';
 
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 interface AdminDashboardProps {}
 
 export default function AdminDashboard({}: AdminDashboardProps) {
+  const { user, logout } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
   const [stats, setStats] = useState([
     { label: 'Total Sessions', value: '0', change: '+0%', color: 'text-blue-600' },
@@ -39,6 +45,7 @@ export default function AdminDashboard({}: AdminDashboardProps) {
     { id: 'sessions', label: 'Chat Sessions', icon: Users },
     { id: 'resources', label: 'Resources', icon: Database },
     { id: 'analytics', label: 'Analytics', icon: Activity },
+    ...(user?.role === 'admin' ? [{ id: 'users', label: 'User Management', icon: UserCog }] : []),
   ];
 
   // Fetch real data on component mount
@@ -103,7 +110,8 @@ export default function AdminDashboard({}: AdminDashboardProps) {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <ProtectedRoute requiredRole={['admin', 'manager', 'viewer']}>
+      <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <div className="bg-white shadow-sm border-b">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -118,6 +126,9 @@ export default function AdminDashboard({}: AdminDashboardProps) {
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <div className="text-sm text-gray-500">
+                Welcome, {user?.email} ({user?.role})
+              </div>
               <div className="text-sm text-gray-500">
                 Last updated: {new Date().toLocaleDateString()}
               </div>
@@ -137,6 +148,15 @@ export default function AdminDashboard({}: AdminDashboardProps) {
                 onClick={() => window.location.href = '/'}
               >
                 Back to Chat
+              </Button>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={logout}
+                className="flex items-center gap-2 text-red-600 hover:text-red-700"
+              >
+                <LogOut className="w-4 h-4" />
+                Logout
               </Button>
             </div>
           </div>
@@ -274,6 +294,10 @@ export default function AdminDashboard({}: AdminDashboardProps) {
               <TrainingDataManager />
             )}
 
+            {activeTab === 'users' && user?.role === 'admin' && (
+              <UserManager />
+            )}
+
             {activeTab === 'sessions' && (
               <div className="space-y-6">
                 <div>
@@ -337,5 +361,6 @@ export default function AdminDashboard({}: AdminDashboardProps) {
         </div>
       </div>
     </div>
+    </ProtectedRoute>
   );
 }
