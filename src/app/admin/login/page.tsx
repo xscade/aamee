@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Shield, Eye, EyeOff, AlertCircle } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthContext';
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('');
@@ -14,6 +15,7 @@ export default function AdminLogin() {
   const [error, setError] = useState('');
   
   const router = useRouter();
+  const { login } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,6 +23,8 @@ export default function AdminLogin() {
     setError('');
 
     try {
+      console.log('Attempting login for:', email);
+      
       const response = await fetch('/api/auth/login', {
         method: 'POST',
         headers: {
@@ -30,18 +34,26 @@ export default function AdminLogin() {
       });
 
       const data = await response.json();
+      console.log('Login response:', data);
 
       if (response.ok) {
-        // Store token in localStorage
-        localStorage.setItem('adminToken', data.token);
-        localStorage.setItem('adminUser', JSON.stringify(data.user));
+        console.log('Login successful, setting user state...');
         
-        // Redirect to admin dashboard
-        router.push('/admin');
+        // Use AuthContext to properly set user state
+        login(data.token, data.user);
+        
+        console.log('User state set, redirecting to admin...');
+        
+        // Add a small delay to ensure state is updated
+        setTimeout(() => {
+          router.push('/admin');
+        }, 100);
       } else {
+        console.error('Login failed:', data.error);
         setError(data.error || 'Login failed');
       }
     } catch (error) {
+      console.error('Login error:', error);
       setError('Network error. Please try again.');
     } finally {
       setIsLoading(false);

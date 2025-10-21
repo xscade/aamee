@@ -14,16 +14,22 @@ export default function ProtectedRoute({ children, requiredRole }: ProtectedRout
   const router = useRouter();
 
   useEffect(() => {
+    console.log('ProtectedRoute: isLoading =', isLoading, 'user =', user);
+    
     if (!isLoading) {
       if (!user) {
+        console.log('ProtectedRoute: No user, redirecting to login');
         router.push('/admin/login');
         return;
       }
 
       if (requiredRole && !requiredRole.includes(user.role)) {
+        console.log('ProtectedRoute: User role not authorized, redirecting to login');
         router.push('/admin/login');
         return;
       }
+      
+      console.log('ProtectedRoute: User authorized, allowing access');
     }
   }, [user, isLoading, requiredRole, router]);
 

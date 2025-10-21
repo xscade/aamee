@@ -32,24 +32,44 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const storedUser = localStorage.getItem('adminUser');
 
     if (storedToken && storedUser) {
-      try {
+      // Verify token with server
+      fetch('/api/auth/verify', {
+        headers: {
+          'Authorization': `Bearer ${storedToken}`
+        }
+      })
+      .then(response => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          throw new Error('Token verification failed');
+        }
+      })
+      .then(data => {
         setToken(storedToken);
-        setUser(JSON.parse(storedUser));
-      } catch (error) {
-        // Invalid stored data, clear it
+        setUser(data.user);
+      })
+      .catch(error => {
+        console.error('Token verification failed:', error);
+        // Invalid token, clear stored data
         localStorage.removeItem('adminToken');
         localStorage.removeItem('adminUser');
-      }
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+    } else {
+      setIsLoading(false);
     }
-    
-    setIsLoading(false);
   }, []);
 
   const login = (newToken: string, newUser: User) => {
+    console.log('AuthContext: Setting user state:', newUser);
     setToken(newToken);
     setUser(newUser);
     localStorage.setItem('adminToken', newToken);
     localStorage.setItem('adminUser', JSON.stringify(newUser));
+    console.log('AuthContext: User state set successfully');
   };
 
   const logout = () => {
