@@ -5,17 +5,22 @@ import { requireAuth } from '@/lib/auth';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
+    console.log('PUT /api/admin/users/[id] - Starting request');
+    
     const user = await requireAuth(['admin'])(request);
     
     if (!user) {
+      console.log('PUT /api/admin/users/[id] - Unauthorized');
       return NextResponse.json(
         { error: 'Unauthorized - Admin access required' },
         { status: 401 }
       );
     }
+
+    console.log('PUT /api/admin/users/[id] - User authenticated:', user.email);
 
     const { isActive, role } = await request.json();
 
@@ -31,7 +36,7 @@ export async function PUT(
       updateData.role = role;
     }
 
-    const { id } = await params;
+    const { id } = params;
     const updatedUser = await User.findByIdAndUpdate(
       id,
       updateData,
@@ -67,21 +72,27 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: { id: string } }
 ) {
   try {
+    console.log('DELETE /api/admin/users/[id] - Starting request');
+    
     const user = await requireAuth(['admin'])(request);
     
     if (!user) {
+      console.log('DELETE /api/admin/users/[id] - Unauthorized');
       return NextResponse.json(
         { error: 'Unauthorized - Admin access required' },
         { status: 401 }
       );
     }
 
+    console.log('DELETE /api/admin/users/[id] - User authenticated:', user.email);
+
     await connectDB();
 
-    const { id } = await params;
+    const { id } = params;
+    console.log('DELETE /api/admin/users/[id] - Deleting user with ID:', id);
     const deletedUser = await User.findByIdAndDelete(id);
 
     if (!deletedUser) {
