@@ -44,6 +44,12 @@ export default function UserManager({}: UserManagerProps) {
   const fetchUsers = async () => {
     try {
       const token = localStorage.getItem('adminToken');
+      if (!token) {
+        console.error('No authentication token found');
+        setIsLoading(false);
+        return;
+      }
+
       const response = await fetch('/api/admin/users', {
         headers: {
           'Authorization': `Bearer ${token}`
@@ -54,10 +60,13 @@ export default function UserManager({}: UserManagerProps) {
         const data = await response.json();
         setUsers(data.users);
       } else {
-        console.error('Failed to fetch users');
+        const errorData = await response.json();
+        console.error('Failed to fetch users:', errorData);
+        alert('Failed to fetch users: ' + (errorData.error || 'Unknown error'));
       }
     } catch (error) {
       console.error('Error fetching users:', error);
+      alert('Error fetching users: ' + (error instanceof Error ? error.message : 'Unknown error'));
     } finally {
       setIsLoading(false);
     }
@@ -68,6 +77,11 @@ export default function UserManager({}: UserManagerProps) {
     
     try {
       const token = localStorage.getItem('adminToken');
+      if (!token) {
+        alert('No authentication token found. Please login again.');
+        return;
+      }
+
       const response = await fetch('/api/admin/users', {
         method: 'POST',
         headers: {
@@ -77,16 +91,20 @@ export default function UserManager({}: UserManagerProps) {
         body: JSON.stringify(newUser)
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         await fetchUsers();
         setNewUser({ email: '', password: '', role: 'viewer' });
         setIsAddingUser(false);
+        alert('User created successfully');
       } else {
-        const data = await response.json();
+        console.error('Create user error:', data);
         alert(data.error || 'Failed to create user');
       }
     } catch (error) {
-      alert('Error creating user');
+      console.error('Error creating user:', error);
+      alert('Error creating user: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
@@ -120,6 +138,11 @@ export default function UserManager({}: UserManagerProps) {
 
     try {
       const token = localStorage.getItem('adminToken');
+      if (!token) {
+        alert('No authentication token found. Please login again.');
+        return;
+      }
+
       const response = await fetch(`/api/admin/users/${userId}`, {
         method: 'DELETE',
         headers: {
@@ -127,14 +150,18 @@ export default function UserManager({}: UserManagerProps) {
         }
       });
 
+      const data = await response.json();
+
       if (response.ok) {
         await fetchUsers();
+        alert('User deleted successfully');
       } else {
-        const data = await response.json();
+        console.error('Delete user error:', data);
         alert(data.error || 'Failed to delete user');
       }
     } catch (error) {
-      alert('Error deleting user');
+      console.error('Delete user error:', error);
+      alert('Error deleting user: ' + (error instanceof Error ? error.message : 'Unknown error'));
     }
   };
 
