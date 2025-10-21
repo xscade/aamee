@@ -5,7 +5,7 @@ import { requireAuth } from '@/lib/auth';
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     console.log('PUT /api/admin/users/[id] - Starting request');
@@ -36,7 +36,7 @@ export async function PUT(
       updateData.role = role;
     }
 
-    const { id } = params;
+    const { id } = await params;
     const updatedUser = await User.findByIdAndUpdate(
       id,
       updateData,
@@ -72,7 +72,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     console.log('DELETE /api/admin/users/[id] - Starting request');
@@ -91,7 +91,7 @@ export async function DELETE(
 
     await connectDB();
 
-    const { id } = params;
+    const { id } = await params;
     console.log('DELETE /api/admin/users/[id] - Deleting user with ID:', id);
     const deletedUser = await User.findByIdAndDelete(id);
 
