@@ -483,7 +483,7 @@ Everything we discuss is completely confidential. How can I help you today?`,
                 const newVoiceState = !isVoiceEnabled;
                 console.log('Voice enabled:', newVoiceState);
                 setIsVoiceEnabled(newVoiceState);
-                
+
                 // Test speech synthesis if enabling
                 if (newVoiceState && synthRef.current) {
                   console.log('Testing speech synthesis...');
@@ -492,9 +492,11 @@ Everything we discuss is completely confidential. How can I help you today?`,
                   }, 100);
                 }
               }}
+              disabled={language !== 'en' && language !== 'hi'}
+              title={language !== 'en' && language !== 'hi' ? 'Voice output available for English and Hindi only' : 'Toggle voice output'}
               className={`h-6 px-2 text-xs transition-colors ${
-                isVoiceEnabled 
-                  ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                isVoiceEnabled
+                  ? 'bg-green-100 text-green-700 hover:bg-green-200'
                   : 'text-gray-600 hover:text-gray-700 hover:bg-gray-100'
               }`}
             >
