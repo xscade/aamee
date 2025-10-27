@@ -308,7 +308,16 @@ Everything we discuss is completely confidential. How can I help you today?`,
               style={{ backgroundColor: 'white' }}
             >
               <option value="en">English</option>
-              <option value="hi">Hindi</option>
+              <option value="hi">हिंदी</option>
+              <option value="bn">বাংলা</option>
+              <option value="gu">ગુજરાતી</option>
+              <option value="kn">ಕನ್ನಡ</option>
+              <option value="ml">മലയാളം</option>
+              <option value="mr">मराठी</option>
+              <option value="or">ଓଡ଼ିଆ</option>
+              <option value="pa">ਪੰਜਾਬੀ</option>
+              <option value="ta">தமிழ்</option>
+              <option value="te">తెలుగు</option>
             </select>
           </div>
           <div className="flex items-center justify-between">
