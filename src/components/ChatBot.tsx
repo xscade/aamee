@@ -445,12 +445,13 @@ Everything we discuss is completely confidential. How can I help you today?`,
               variant="ghost"
               size="icon"
               className={`absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 transition-colors ${
-                isVoiceRecording 
-                  ? 'bg-red-100 text-red-600 hover:bg-red-200' 
+                isVoiceRecording
+                  ? 'bg-red-100 text-red-600 hover:bg-red-200'
                   : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
               }`}
               onClick={handleVoiceInput}
-              disabled={isLoading}
+              disabled={isLoading || (language !== 'en' && language !== 'hi')}
+              title={language !== 'en' && language !== 'hi' ? 'Voice input available for English and Hindi only' : 'Voice input'}
             >
               {isVoiceRecording ? (
                 <MicOff className="h-3 w-3" />
