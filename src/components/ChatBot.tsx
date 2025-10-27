@@ -120,6 +120,25 @@ Everything we discuss is completely confidential. How can I help you today?`,
         }
       }, [messages.length, isVoiceEnabled, messages]);
 
+  // Disable voice features when switching to unsupported language
+  useEffect(() => {
+    if (language !== 'en' && language !== 'hi') {
+      // Stop any ongoing speech
+      if (synthRef.current) {
+        synthRef.current.cancel();
+      }
+      // Stop any ongoing voice recording
+      if (isVoiceRecording && recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      // Disable voice output
+      if (isVoiceEnabled) {
+        setIsVoiceEnabled(false);
+      }
+      setIsVoiceRecording(false);
+    }
+  }, [language, isVoiceEnabled, isVoiceRecording]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading || !sessionId) return;
