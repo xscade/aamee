@@ -120,6 +120,25 @@ Everything we discuss is completely confidential. How can I help you today?`,
         }
       }, [messages.length, isVoiceEnabled, messages]);
 
+  // Disable voice features when switching to unsupported language
+  useEffect(() => {
+    if (language !== 'en' && language !== 'hi') {
+      // Stop any ongoing speech
+      if (synthRef.current) {
+        synthRef.current.cancel();
+      }
+      // Stop any ongoing voice recording
+      if (isVoiceRecording && recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      // Disable voice output
+      if (isVoiceEnabled) {
+        setIsVoiceEnabled(false);
+      }
+      setIsVoiceRecording(false);
+    }
+  }, [language, isVoiceEnabled, isVoiceRecording]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isLoading || !sessionId) return;
@@ -308,7 +327,16 @@ Everything we discuss is completely confidential. How can I help you today?`,
               style={{ backgroundColor: 'white' }}
             >
               <option value="en">English</option>
-              <option value="hi">Hindi</option>
+              <option value="hi">हिंदी</option>
+              <option value="bn">বাংলা</option>
+              <option value="gu">ગુજરાતી</option>
+              <option value="kn">ಕನ್ನಡ</option>
+              <option value="ml">മലയാളം</option>
+              <option value="mr">मराठी</option>
+              <option value="or">ଓଡ଼ିଆ</option>
+              <option value="pa">ਪੰਜਾਬੀ</option>
+              <option value="ta">தமிழ்</option>
+              <option value="te">తెలుగు</option>
             </select>
           </div>
           <div className="flex items-center justify-between">
@@ -436,12 +464,13 @@ Everything we discuss is completely confidential. How can I help you today?`,
               variant="ghost"
               size="icon"
               className={`absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 transition-colors ${
-                isVoiceRecording 
-                  ? 'bg-red-100 text-red-600 hover:bg-red-200' 
+                isVoiceRecording
+                  ? 'bg-red-100 text-red-600 hover:bg-red-200'
                   : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
               }`}
               onClick={handleVoiceInput}
-              disabled={isLoading}
+              disabled={isLoading || (language !== 'en' && language !== 'hi')}
+              title={language !== 'en' && language !== 'hi' ? 'Voice input available for English and Hindi only' : 'Voice input'}
             >
               {isVoiceRecording ? (
                 <MicOff className="h-3 w-3" />
@@ -473,7 +502,7 @@ Everything we discuss is completely confidential. How can I help you today?`,
                 const newVoiceState = !isVoiceEnabled;
                 console.log('Voice enabled:', newVoiceState);
                 setIsVoiceEnabled(newVoiceState);
-                
+
                 // Test speech synthesis if enabling
                 if (newVoiceState && synthRef.current) {
                   console.log('Testing speech synthesis...');
@@ -482,9 +511,11 @@ Everything we discuss is completely confidential. How can I help you today?`,
                   }, 100);
                 }
               }}
+              disabled={language !== 'en' && language !== 'hi'}
+              title={language !== 'en' && language !== 'hi' ? 'Voice output available for English and Hindi only' : 'Toggle voice output'}
               className={`h-6 px-2 text-xs transition-colors ${
-                isVoiceEnabled 
-                  ? 'bg-green-100 text-green-700 hover:bg-green-200' 
+                isVoiceEnabled
+                  ? 'bg-green-100 text-green-700 hover:bg-green-200'
                   : 'text-gray-600 hover:text-gray-700 hover:bg-gray-100'
               }`}
             >

@@ -18,6 +18,23 @@ export async function generateChatResponse(
   language: string = 'en'
 ): Promise<ChatResponse> {
   try {
+    // Language code to name mapping
+    const languageNames: Record<string, string> = {
+      en: 'English',
+      hi: 'Hindi',
+      bn: 'Bengali',
+      te: 'Telugu',
+      mr: 'Marathi',
+      ta: 'Tamil',
+      gu: 'Gujarati',
+      kn: 'Kannada',
+      ml: 'Malayalam',
+      pa: 'Punjabi',
+      or: 'Odia'
+    };
+
+    const targetLanguage = languageNames[language] || 'English';
+
     const systemPrompt = `You are AME, a compassionate AI assistant for domestic violence survivors. Your role is to provide support, guidance, and connect users to appropriate resources while maintaining their privacy and safety.
 
 Key Guidelines:
@@ -27,7 +44,7 @@ Key Guidelines:
 4. Provide practical, actionable advice
 5. Connect users to relevant support services
 6. Use a warm, supportive tone
-7. Respond in ${language === 'hi' ? 'Hindi' : 'English'}
+7. Respond in ${targetLanguage}
 
 Available Support Categories:
 - Legal Help: Filing FIR, legal aid, protection orders
