@@ -568,47 +568,6 @@ export default function ChatBot({ className }: ChatBotProps) {
 
       {/* Input / Question Options */}
       <div className="border-t p-4">
-<<<<<<< HEAD
-        <form onSubmit={handleSubmit} className="flex gap-2">
-          <div className="flex-1 relative">
-            <textarea
-              ref={textareaRef}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={handleKeyDown}
-              placeholder="Type your message..."
-              disabled={isLoading}
-              className={cn(
-                "w-full min-h-[40px] max-h-[120px] px-3 py-2 pr-10",
-                "border border-gray-200 rounded-lg resize-none",
-                "focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400",
-                "disabled:opacity-50 disabled:cursor-not-allowed",
-                "placeholder:text-gray-500 text-sm"
-              )}
-              style={{ color: '#DD4B4F' }}
-              rows={1}
-            />
-            
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className={`absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 transition-colors ${
-                isVoiceRecording
-                  ? 'bg-red-100 text-red-600 hover:bg-red-200'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
-              }`}
-              onClick={handleVoiceInput}
-              disabled={isLoading || (language !== 'en' && language !== 'hi')}
-              title={language !== 'en' && language !== 'hi' ? 'Voice input available for English and Hindi only' : 'Voice input'}
-            >
-              {isVoiceRecording ? (
-                <MicOff className="h-3 w-3" />
-              ) : (
-                <Mic className="h-3 w-3" />
-              )}
-            </Button>
-=======
         {questionnaireStep <= 7 ? (
           <div className="space-y-3">
             {/* Question Options */}
@@ -738,7 +697,6 @@ export default function ChatBot({ className }: ChatBotProps) {
                 ))}
               </div>
             )}
->>>>>>> 1d09b88 (Auto-commit: Agent tool execution)
           </div>
         ) : (
           // Regular chat input after questionnaire
@@ -772,7 +730,8 @@ export default function ChatBot({ className }: ChatBotProps) {
                     : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
                 }`}
                 onClick={handleVoiceInput}
-                disabled={isLoading}
+                disabled={isLoading || (language !== 'en' && language !== 'hi')}
+                title={language !== 'en' && language !== 'hi' ? 'Voice input available for English and Hindi only' : 'Voice input'}
               >
                 {isVoiceRecording ? (
                   <MicOff className="h-3 w-3" />
