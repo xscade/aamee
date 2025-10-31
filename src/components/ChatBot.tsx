@@ -809,7 +809,7 @@ export default function ChatBot({ className }: ChatBotProps) {
           </div>
         ))}
         
-        {isLoading && (
+        {(isLoading || resourcesLoading) && (
           <div className="flex gap-3">
             <div
               className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-1"
