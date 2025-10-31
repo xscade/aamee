@@ -107,27 +107,18 @@ export default function ChatBot({ className }: ChatBotProps) {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
-  // Initialize with welcome message if no messages
+  // Initialize with first questionnaire question if no messages
   useEffect(() => {
-    if (messages.length === 0) {
-      const welcomeMessage: IChatMessage = {
+    if (messages.length === 0 && questionnaireStep === 1) {
+      const questionMessage: IChatMessage = {
         role: 'assistant',
-        content: `Hello, I'm AME. I'm here to provide confidential support and connect you with resources for domestic violence survivors. 
-
-I can help you with:
-• Legal assistance and protection orders
-• Medical and mental health support  
-• Emergency shelter information
-• Safety planning and self-care
-• Connecting with local resources
-
-Everything we discuss is completely confidential. How can I help you today?`,
+        content: t('questionnaire.q1_question'),
         timestamp: new Date(),
         severity: 'low'
       };
-      setMessages([welcomeMessage]);
+      setMessages([questionMessage]);
     }
-  }, [messages.length]);
+  }, [messages.length, questionnaireStep, t]);
 
       // Speak welcome message if voice is enabled and it's the first message
       useEffect(() => {
