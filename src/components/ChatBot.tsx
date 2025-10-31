@@ -587,23 +587,46 @@ export default function ChatBot({ className }: ChatBotProps) {
             )}
             {questionnaireStep === 2 && (
               <div className="space-y-2">
-                {['q2_yes', 'q2_unsure', 'q2_no'].map((key) => (
-                  <Button
-                    key={key}
-                    onClick={() => handleQuestionnaireAnswer(t(`questionnaire.${key}`), 'isSafe')}
-                    className="w-full py-3 text-sm font-medium"
-                    style={{ backgroundColor: '#DD4B4F' }}
-                  >
-                    {t(`questionnaire.${key}`)}
-                  </Button>
-                ))}
-                {isEmergency && (
-                  <Button
-                    onClick={() => window.close()}
-                    className="w-full py-3 text-sm font-medium bg-red-600 hover:bg-red-700"
-                  >
-                    {t('questionnaire.quickExit')}
-                  </Button>
+                {!isEmergency ? (
+                  <>
+                    {['q2_yes', 'q2_unsure', 'q2_no'].map((key) => (
+                      <Button
+                        key={key}
+                        onClick={() => handleQuestionnaireAnswer(t(`questionnaire.${key}`), 'isSafe')}
+                        className="w-full py-3 text-sm font-medium"
+                        style={{ backgroundColor: '#DD4B4F' }}
+                      >
+                        {t(`questionnaire.${key}`)}
+                      </Button>
+                    ))}
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      onClick={() => window.close()}
+                      className="w-full py-3 text-sm font-medium bg-red-600 hover:bg-red-700"
+                    >
+                      {t('questionnaire.quickExit')}
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        const nextStep = 3;
+                        setQuestionnaireStep(nextStep);
+                        const nextQuestion = getQuestionContent(nextStep);
+                        const questionMessage: IChatMessage = {
+                          role: 'assistant',
+                          content: nextQuestion,
+                          timestamp: new Date(),
+                          severity: 'low'
+                        };
+                        setMessages(prev => [...prev, questionMessage]);
+                      }}
+                      className="w-full py-3 text-sm font-medium"
+                      style={{ backgroundColor: '#DD4B4F' }}
+                    >
+                      Continue
+                    </Button>
+                  </>
                 )}
               </div>
             )}
