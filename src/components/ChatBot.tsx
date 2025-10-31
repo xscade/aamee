@@ -10,8 +10,8 @@ declare global {
   }
 }
 import { Button } from '@/components/ui/Button';
-// import { Card } from '@/components/ui/Card'; // Unused import
-import { Settings, Shield, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/Card';
+import { Settings, Shield, Send, Mic, MicOff, Volume2, VolumeX, Phone, Mail, Globe, MapPin, CheckCircle, Clock } from 'lucide-react';
 import { generateSessionId, detectSeverity } from '@/lib/utils';
 import { IChatMessage } from '@/models/ChatSession';
 import { useTranslation } from '@/lib/translations';
