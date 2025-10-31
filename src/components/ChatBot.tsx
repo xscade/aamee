@@ -307,6 +307,109 @@ export default function ChatBot({ className }: ChatBotProps) {
     setMessages(prev => [...prev, successMessage]);
   };
 
+  // Render individual resource card
+  const renderResourceCard = (resource: Resource) => {
+    const contactMode = answers.contactMode;
+    const showPhone = contactMode === t('questionnaire.q6_call');
+    const showEmail = contactMode === t('questionnaire.q6_email');
+    const showWebsite = contactMode === t('questionnaire.q6_chat');
+
+    // Category labels
+    const categoryLabels: { [key: string]: string } = {
+      emergency: language === 'hi' ? 'आपातकालीन' : 'Emergency',
+      shelter: language === 'hi' ? 'शरणस्थली' : 'Shelter',
+      legal: language === 'hi' ? 'कानूनी' : 'Legal',
+      psychological: language === 'hi' ? 'परामर्श' : 'Counseling',
+      medical: language === 'hi' ? 'चिकित्सा' : 'Medical',
+      general: language === 'hi' ? 'सामान्य' : 'General'
+    };
+
+    return (
+      <Card key={resource._id} className="mb-3 bg-white border-gray-200">
+        <CardHeader className="pb-3">
+          <div className="flex items-start justify-between gap-2">
+            <div className="flex-1">
+              <CardTitle className="text-base font-semibold text-gray-900 mb-1">
+                {resource.title}
+              </CardTitle>
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium"
+                  style={{ backgroundColor: '#FEE2E2', color: '#DD4B4F' }}
+                >
+                  {categoryLabels[resource.category] || resource.category}
+                </span>
+                {resource.is24Hours && (
+                  <span className="inline-flex items-center gap-1 text-xs text-gray-600">
+                    <Clock className="h-3 w-3" />
+                    24/7
+                  </span>
+                )}
+                {resource.isVerified && (
+                  <span className="inline-flex items-center gap-1 text-xs text-green-600">
+                    <CheckCircle className="h-3 w-3" />
+                    {language === 'hi' ? 'सत्यापित' : 'Verified'}
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="pt-0">
+          <p className="text-sm text-gray-600 mb-3">{resource.description}</p>
+
+          {/* Location */}
+          {resource.location && (resource.location.city || resource.location.state) && (
+            <div className="flex items-start gap-2 mb-2 text-sm text-gray-600">
+              <MapPin className="h-4 w-4 mt-0.5 flex-shrink-0" />
+              <span>
+                {[resource.location.city, resource.location.state]
+                  .filter(Boolean)
+                  .join(', ')}
+              </span>
+            </div>
+          )}
+
+          {/* Contact Information */}
+          <div className="space-y-2 mt-3">
+            {(showPhone || !contactMode) && resource.contactInfo.phone && (
+              <a
+                href={`tel:${resource.contactInfo.phone}`}
+                className="flex items-center gap-2 text-sm hover:underline"
+                style={{ color: '#DD4B4F' }}
+              >
+                <Phone className="h-4 w-4" />
+                <span>{resource.contactInfo.phone}</span>
+              </a>
+            )}
+            {(showEmail || !contactMode) && resource.contactInfo.email && (
+              <a
+                href={`mailto:${resource.contactInfo.email}`}
+                className="flex items-center gap-2 text-sm hover:underline"
+                style={{ color: '#DD4B4F' }}
+              >
+                <Mail className="h-4 w-4" />
+                <span>{resource.contactInfo.email}</span>
+              </a>
+            )}
+            {(showWebsite || !contactMode) && resource.contactInfo.website && (
+              <a
+                href={resource.contactInfo.website}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-sm hover:underline"
+                style={{ color: '#DD4B4F' }}
+              >
+                <Globe className="h-4 w-4" />
+                <span>{language === 'hi' ? 'वेबसाइट पर जाएं' : 'Visit Website'}</span>
+              </a>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+    );
+  };
+
   // Handle questionnaire answer selection
   const handleQuestionnaireAnswer = (answer: string, answerKey: keyof QuestionnaireAnswers) => {
     // Add user's answer to messages
