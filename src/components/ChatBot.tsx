@@ -70,6 +70,9 @@ export default function ChatBot({ className }: ChatBotProps) {
   const [answers, setAnswers] = useState<QuestionnaireAnswers>({});
   const [isEmergency, setIsEmergency] = useState(false);
   const [needsShelter, setNeedsShelter] = useState(false);
+  const [resources, setResources] = useState<Resource[]>([]);
+  const [resourcesLoading, setResourcesLoading] = useState(false);
+  const [resourcesError, setResourcesError] = useState(false);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
