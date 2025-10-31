@@ -14,11 +14,21 @@ import { Button } from '@/components/ui/Button';
 import { Settings, Shield, Send, Mic, MicOff, Volume2, VolumeX } from 'lucide-react';
 import { generateSessionId, detectSeverity } from '@/lib/utils';
 import { IChatMessage } from '@/models/ChatSession';
-// import { useTranslation } from '@/lib/translations'; // Unused
+import { useTranslation } from '@/lib/translations';
 import { cn } from '@/lib/utils';
 
 interface ChatBotProps {
   className?: string;
+}
+
+interface QuestionnaireAnswers {
+  language?: string;
+  isSafe?: string;
+  helpType?: string;
+  location?: string;
+  hasSafePlace?: string;
+  contactMode?: string;
+  helpFor?: string;
 }
 
 export default function ChatBot({ className }: ChatBotProps) {
@@ -31,12 +41,18 @@ export default function ChatBot({ className }: ChatBotProps) {
   const [showSettings, setShowSettings] = useState(false);
   const [isVoiceEnabled, setIsVoiceEnabled] = useState(false);
   const [isVoiceRecording, setIsVoiceRecording] = useState(false);
-  
+
+  // Questionnaire state
+  const [questionnaireStep, setQuestionnaireStep] = useState(1);
+  const [answers, setAnswers] = useState<QuestionnaireAnswers>({});
+  const [isEmergency, setIsEmergency] = useState(false);
+  const [needsShelter, setNeedsShelter] = useState(false);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
   const synthRef = useRef<SpeechSynthesis | null>(null);
-      // const t = useTranslation(language); // Unused variable
+  const t = useTranslation(language);
 
   // Generate session ID only on client side to prevent hydration mismatch
   useEffect(() => {
