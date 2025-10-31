@@ -153,6 +153,7 @@ export default function ChatBot({ className }: ChatBotProps) {
         }
       }, [messages.length, isVoiceEnabled, messages]);
 
+<<<<<<< HEAD
   // Disable voice features when switching to unsupported language
   useEffect(() => {
     if (language !== 'en' && language !== 'hi') {
@@ -171,6 +172,142 @@ export default function ChatBot({ className }: ChatBotProps) {
       setIsVoiceRecording(false);
     }
   }, [language, isVoiceEnabled, isVoiceRecording]);
+=======
+  // Fetch resources when questionnaire is complete
+  useEffect(() => {
+    if (questionnaireStep === 8 && !resourcesLoading && resources.length === 0) {
+      fetchResources();
+    }
+  }, [questionnaireStep]);
+
+  // Map helpType to category
+  const mapHelpTypeToCategory = (helpType: string): string => {
+    const helpTypeMap: { [key: string]: string } = {
+      [t('questionnaire.q3_emergency')]: 'emergency',
+      [t('questionnaire.q3_shelter')]: 'shelter',
+      [t('questionnaire.q3_legal')]: 'legal',
+      [t('questionnaire.q3_counseling')]: 'psychological',
+      [t('questionnaire.q3_rights')]: 'legal',
+    };
+    return helpTypeMap[helpType] || 'general';
+  };
+
+  // Fetch resources from API
+  const fetchResources = async () => {
+    setResourcesLoading(true);
+    setResourcesError(false);
+
+    try {
+      // Build query parameters based on answers
+      const params = new URLSearchParams();
+
+      // Map helpType to category
+      if (answers.helpType) {
+        const category = mapHelpTypeToCategory(answers.helpType);
+        params.append('category', category);
+      }
+
+      // Add location if provided
+      if (answers.location) {
+        params.append('location', answers.location);
+      }
+
+      // Prioritize emergency if user is not safe
+      if (answers.isSafe === t('questionnaire.q2_no')) {
+        params.set('category', 'emergency');
+      }
+
+      // Prioritize shelter if user doesn't have safe place
+      if (answers.hasSafePlace === t('questionnaire.q5_no')) {
+        params.set('category', 'shelter');
+      }
+
+      const response = await fetch(`/api/resources?${params.toString()}`);
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch resources');
+      }
+
+      const data = await response.json();
+      setResources(data.resources || []);
+
+      // Display resources in chat
+      displayResources(data.resources || []);
+
+    } catch (error) {
+      console.error('Error fetching resources:', error);
+      setResourcesError(true);
+
+      // Show error message with emergency contacts
+      const errorMessage: IChatMessage = {
+        role: 'assistant',
+        content: t('questionnaire.emergencyMessage'),
+        timestamp: new Date(),
+        severity: 'emergency'
+      };
+      setMessages(prev => [...prev, errorMessage]);
+
+      const contactsMessage: IChatMessage = {
+        role: 'assistant',
+        content: `${t('chat.police')}\n${t('chat.womenHelpline')}\n${t('chat.medicalEmergency')}\n${t('chat.domesticViolence')}\n\n${t('chat.available24_7')}`,
+        timestamp: new Date(),
+        severity: 'emergency'
+      };
+      setMessages(prev => [...prev, contactsMessage]);
+    } finally {
+      setResourcesLoading(false);
+    }
+  };
+
+  // Display resources in chat
+  const displayResources = (fetchedResources: Resource[]) => {
+    // Show guidance message if helping someone else
+    if (answers.helpFor === t('questionnaire.q7_someone')) {
+      const guidanceMessage: IChatMessage = {
+        role: 'assistant',
+        content: language === 'hi'
+          ? 'किसी और की मदद करना बहुत साहसी है। कृपया याद रखें कि उनकी सुरक्षा और सहमति सबसे महत्वपूर्ण है। यहां कुछ संसाधन दिए गए हैं जो मदद कर सकते हैं:'
+          : 'It\'s very brave to help someone else. Please remember that their safety and consent are most important. Here are some resources that can help:',
+        timestamp: new Date(),
+        severity: 'low'
+      };
+      setMessages(prev => [...prev, guidanceMessage]);
+    }
+
+    if (fetchedResources.length === 0) {
+      // No resources found
+      const noResourcesMessage: IChatMessage = {
+        role: 'assistant',
+        content: language === 'hi'
+          ? 'हमें आपके क्षेत्र में विशिष्ट संसाधन नहीं मिले, लेकिन आप इन आपातकालीन संपर्कों तक पहुंच सकते हैं जो 24/7 उपलब्ध हैं:'
+          : 'We couldn\'t find specific resources in your area, but you can reach these emergency contacts that are available 24/7:',
+        timestamp: new Date(),
+        severity: 'medium'
+      };
+      setMessages(prev => [...prev, noResourcesMessage]);
+
+      const emergencyContactsMessage: IChatMessage = {
+        role: 'assistant',
+        content: `${t('chat.police')}\n${t('chat.womenHelpline')}\n${t('chat.medicalEmergency')}\n${t('chat.domesticViolence')}\n\n${t('chat.available24_7')}`,
+        timestamp: new Date(),
+        severity: 'emergency'
+      };
+      setMessages(prev => [...prev, emergencyContactsMessage]);
+      return;
+    }
+
+    // Show success message
+    const successMessage: IChatMessage = {
+      role: 'assistant',
+      content: language === 'hi'
+        ? `मैंने आपके लिए ${fetchedResources.length} संसाधन पाए हैं:`
+        : `I found ${fetchedResources.length} resources for you:`,
+      timestamp: new Date(),
+      severity: 'low'
+    };
+    setMessages(prev => [...prev, successMessage]);
+  };
+>>>>>>> 8b5de00 (Auto-commit: Agent tool execution)
 
   // Handle questionnaire answer selection
   const handleQuestionnaireAnswer = (answer: string, answerKey: keyof QuestionnaireAnswers) => {
