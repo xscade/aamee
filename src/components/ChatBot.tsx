@@ -811,7 +811,7 @@ export default function ChatBot({ className }: ChatBotProps) {
         
         {isLoading && (
           <div className="flex gap-3">
-            <div 
+            <div
               className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-1"
               style={{ backgroundColor: '#DD4B4F' }}
             >
@@ -826,7 +826,22 @@ export default function ChatBot({ className }: ChatBotProps) {
             </div>
           </div>
         )}
-        
+
+        {/* Display resources */}
+        {questionnaireStep === 8 && resources.length > 0 && (
+          <div className="flex gap-3 items-start">
+            <div
+              className="w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-1"
+              style={{ backgroundColor: '#DD4B4F' }}
+            >
+              <Shield className="w-3 h-3 text-white" />
+            </div>
+            <div className="flex-1 space-y-3">
+              {resources.map(resource => renderResourceCard(resource))}
+            </div>
+          </div>
+        )}
+
         <div ref={messagesEndRef} />
       </div>
 
