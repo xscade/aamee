@@ -127,7 +127,6 @@ export default function ChatBot({ className }: ChatBotProps) {
         }
       }, [messages.length, isVoiceEnabled, messages]);
 
-<<<<<<< HEAD
   // Disable voice features when switching to unsupported language
   useEffect(() => {
     if (language !== 'en' && language !== 'hi') {
@@ -146,7 +145,7 @@ export default function ChatBot({ className }: ChatBotProps) {
       setIsVoiceRecording(false);
     }
   }, [language, isVoiceEnabled, isVoiceRecording]);
-=======
+
   // Handle questionnaire answer selection
   const handleQuestionnaireAnswer = (answer: string, answerKey: keyof QuestionnaireAnswers) => {
     // Add user's answer to messages
@@ -268,7 +267,6 @@ export default function ChatBot({ className }: ChatBotProps) {
       alert('Geolocation is not supported by your browser.');
     }
   };
->>>>>>> 029031d (Auto-commit: Agent tool execution)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
