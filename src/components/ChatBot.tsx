@@ -127,6 +127,7 @@ export default function ChatBot({ className }: ChatBotProps) {
         }
       }, [messages.length, isVoiceEnabled, messages]);
 
+<<<<<<< HEAD
   // Disable voice features when switching to unsupported language
   useEffect(() => {
     if (language !== 'en' && language !== 'hi') {
@@ -145,6 +146,129 @@ export default function ChatBot({ className }: ChatBotProps) {
       setIsVoiceRecording(false);
     }
   }, [language, isVoiceEnabled, isVoiceRecording]);
+=======
+  // Handle questionnaire answer selection
+  const handleQuestionnaireAnswer = (answer: string, answerKey: keyof QuestionnaireAnswers) => {
+    // Add user's answer to messages
+    const userMessage: IChatMessage = {
+      role: 'user',
+      content: answer,
+      timestamp: new Date(),
+      severity: 'low'
+    };
+    setMessages(prev => [...prev, userMessage]);
+
+    // Store the answer
+    const newAnswers = { ...answers, [answerKey]: answer };
+    setAnswers(newAnswers);
+
+    // Handle special cases
+    if (questionnaireStep === 1) {
+      // Q1: Language selection
+      const languageMap: { [key: string]: string } = {
+        [t('questionnaire.q1_english')]: 'en',
+        [t('questionnaire.q1_hindi')]: 'hi',
+      };
+      const selectedLanguage = languageMap[answer] || 'en';
+      setLanguage(selectedLanguage);
+    } else if (questionnaireStep === 2 && answer === t('questionnaire.q2_no')) {
+      // Q2: Safety check - "No" means emergency
+      setIsEmergency(true);
+
+      // Show emergency resources immediately
+      const emergencyMessage: IChatMessage = {
+        role: 'assistant',
+        content: t('questionnaire.emergencyMessage'),
+        timestamp: new Date(),
+        severity: 'emergency'
+      };
+      setMessages(prev => [...prev, emergencyMessage]);
+
+      // Add emergency contact details
+      const contactsMessage: IChatMessage = {
+        role: 'assistant',
+        content: `${t('chat.police')}\n${t('chat.womenHelpline')}\n${t('chat.medicalEmergency')}\n${t('chat.domesticViolence')}\n\n${t('chat.available24_7')}`,
+        timestamp: new Date(),
+        severity: 'emergency'
+      };
+      setMessages(prev => [...prev, contactsMessage]);
+      return; // Don't proceed to next question automatically
+    } else if (questionnaireStep === 5 && answer === t('questionnaire.q5_no')) {
+      // Q5: Safe place check - "No" means needs shelter
+      setNeedsShelter(true);
+    }
+
+    // Move to next question or show completion
+    if (questionnaireStep < 7) {
+      setTimeout(() => {
+        const nextStep = questionnaireStep + 1;
+        setQuestionnaireStep(nextStep);
+
+        // Add next question
+        const nextQuestion = getQuestionContent(nextStep);
+        const questionMessage: IChatMessage = {
+          role: 'assistant',
+          content: nextQuestion,
+          timestamp: new Date(),
+          severity: 'low'
+        };
+        setMessages(prev => [...prev, questionMessage]);
+      }, 300);
+    } else {
+      // All questions answered
+      setTimeout(() => {
+        const completionMessage: IChatMessage = {
+          role: 'assistant',
+          content: t('questionnaire.findingResources'),
+          timestamp: new Date(),
+          severity: 'low'
+        };
+        setMessages(prev => [...prev, completionMessage]);
+        setQuestionnaireStep(8); // Mark as complete
+      }, 300);
+    }
+  };
+
+  // Get question content based on step
+  const getQuestionContent = (step: number): string => {
+    switch (step) {
+      case 1: return t('questionnaire.q1_question');
+      case 2: return t('questionnaire.q2_question');
+      case 3: return t('questionnaire.q3_question');
+      case 4: return t('questionnaire.q4_question');
+      case 5: return t('questionnaire.q5_question');
+      case 6: return t('questionnaire.q6_question');
+      case 7: return t('questionnaire.q7_question');
+      default: return '';
+    }
+  };
+
+  // Handle location input submission (Q4)
+  const handleLocationSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!input.trim()) return;
+
+    handleQuestionnaireAnswer(input.trim(), 'location');
+    setInput('');
+  };
+
+  // Handle location detection
+  const handleUseLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const locationText = `${position.coords.latitude}, ${position.coords.longitude}`;
+          handleQuestionnaireAnswer(locationText, 'location');
+        },
+        (error) => {
+          alert('Unable to get your location. Please enter your city or pin code manually.');
+        }
+      );
+    } else {
+      alert('Geolocation is not supported by your browser.');
+    }
+  };
+>>>>>>> 029031d (Auto-commit: Agent tool execution)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
