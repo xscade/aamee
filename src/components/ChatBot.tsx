@@ -153,7 +153,6 @@ export default function ChatBot({ className }: ChatBotProps) {
         }
       }, [messages.length, isVoiceEnabled, messages]);
 
-<<<<<<< HEAD
   // Disable voice features when switching to unsupported language
   useEffect(() => {
     if (language !== 'en' && language !== 'hi') {
@@ -172,7 +171,7 @@ export default function ChatBot({ className }: ChatBotProps) {
       setIsVoiceRecording(false);
     }
   }, [language, isVoiceEnabled, isVoiceRecording]);
-=======
+
   // Fetch resources when questionnaire is complete
   useEffect(() => {
     if (questionnaireStep === 8 && !resourcesLoading && resources.length === 0) {
@@ -307,7 +306,6 @@ export default function ChatBot({ className }: ChatBotProps) {
     };
     setMessages(prev => [...prev, successMessage]);
   };
->>>>>>> 8b5de00 (Auto-commit: Agent tool execution)
 
   // Handle questionnaire answer selection
   const handleQuestionnaireAnswer = (answer: string, answerKey: keyof QuestionnaireAnswers) => {
