@@ -566,8 +566,9 @@ export default function ChatBot({ className }: ChatBotProps) {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
+      {/* Input / Question Options */}
       <div className="border-t p-4">
+<<<<<<< HEAD
         <form onSubmit={handleSubmit} className="flex gap-2">
           <div className="flex-1 relative">
             <textarea
@@ -607,18 +608,191 @@ export default function ChatBot({ className }: ChatBotProps) {
                 <Mic className="h-3 w-3" />
               )}
             </Button>
+=======
+        {questionnaireStep <= 7 ? (
+          <div className="space-y-3">
+            {/* Question Options */}
+            {questionnaireStep === 1 && (
+              <div className="grid grid-cols-2 gap-2">
+                {['q1_english', 'q1_hindi', 'q1_tamil', 'q1_telugu', 'q1_bengali', 'q1_other'].map((key) => (
+                  <Button
+                    key={key}
+                    onClick={() => handleQuestionnaireAnswer(t(`questionnaire.${key}`), 'language')}
+                    className="w-full py-3 text-sm font-medium"
+                    style={{ backgroundColor: '#DD4B4F' }}
+                  >
+                    {t(`questionnaire.${key}`)}
+                  </Button>
+                ))}
+              </div>
+            )}
+            {questionnaireStep === 2 && (
+              <div className="space-y-2">
+                {['q2_yes', 'q2_unsure', 'q2_no'].map((key) => (
+                  <Button
+                    key={key}
+                    onClick={() => handleQuestionnaireAnswer(t(`questionnaire.${key}`), 'isSafe')}
+                    className="w-full py-3 text-sm font-medium"
+                    style={{ backgroundColor: '#DD4B4F' }}
+                  >
+                    {t(`questionnaire.${key}`)}
+                  </Button>
+                ))}
+                {isEmergency && (
+                  <Button
+                    onClick={() => window.close()}
+                    className="w-full py-3 text-sm font-medium bg-red-600 hover:bg-red-700"
+                  >
+                    {t('questionnaire.quickExit')}
+                  </Button>
+                )}
+              </div>
+            )}
+            {questionnaireStep === 3 && (
+              <div className="space-y-2">
+                {['q3_emergency', 'q3_shelter', 'q3_legal', 'q3_counseling', 'q3_rights'].map((key) => (
+                  <Button
+                    key={key}
+                    onClick={() => handleQuestionnaireAnswer(t(`questionnaire.${key}`), 'helpType')}
+                    className="w-full py-3 text-sm font-medium"
+                    style={{ backgroundColor: '#DD4B4F' }}
+                  >
+                    {t(`questionnaire.${key}`)}
+                  </Button>
+                ))}
+              </div>
+            )}
+            {questionnaireStep === 4 && (
+              <div className="space-y-2">
+                <form onSubmit={handleLocationSubmit} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    placeholder={t('questionnaire.q4_placeholder')}
+                    className={cn(
+                      "flex-1 px-3 py-2",
+                      "border border-gray-200 rounded-lg",
+                      "focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400",
+                      "placeholder:text-gray-500 text-sm"
+                    )}
+                    style={{ color: '#DD4B4F' }}
+                  />
+                  <Button
+                    type="submit"
+                    disabled={!input.trim()}
+                    className="px-4 py-2"
+                    style={{ backgroundColor: '#DD4B4F' }}
+                  >
+                    <Send className="h-4 w-4" />
+                  </Button>
+                </form>
+                <Button
+                  onClick={handleUseLocation}
+                  className="w-full py-3 text-sm font-medium"
+                  style={{ backgroundColor: '#DD4B4F' }}
+                >
+                  {t('questionnaire.q4_useLocation')}
+                </Button>
+              </div>
+            )}
+            {questionnaireStep === 5 && (
+              <div className="space-y-2">
+                {['q5_yes', 'q5_no', 'q5_unsure'].map((key) => (
+                  <Button
+                    key={key}
+                    onClick={() => handleQuestionnaireAnswer(t(`questionnaire.${key}`), 'hasSafePlace')}
+                    className="w-full py-3 text-sm font-medium"
+                    style={{ backgroundColor: '#DD4B4F' }}
+                  >
+                    {t(`questionnaire.${key}`)}
+                  </Button>
+                ))}
+              </div>
+            )}
+            {questionnaireStep === 6 && (
+              <div className="space-y-2">
+                {['q6_call', 'q6_chat', 'q6_email'].map((key) => (
+                  <Button
+                    key={key}
+                    onClick={() => handleQuestionnaireAnswer(t(`questionnaire.${key}`), 'contactMode')}
+                    className="w-full py-3 text-sm font-medium"
+                    style={{ backgroundColor: '#DD4B4F' }}
+                  >
+                    {t(`questionnaire.${key}`)}
+                  </Button>
+                ))}
+              </div>
+            )}
+            {questionnaireStep === 7 && (
+              <div className="space-y-2">
+                {['q7_myself', 'q7_someone'].map((key) => (
+                  <Button
+                    key={key}
+                    onClick={() => handleQuestionnaireAnswer(t(`questionnaire.${key}`), 'helpFor')}
+                    className="w-full py-3 text-sm font-medium"
+                    style={{ backgroundColor: '#DD4B4F' }}
+                  >
+                    {t(`questionnaire.${key}`)}
+                  </Button>
+                ))}
+              </div>
+            )}
+>>>>>>> 1d09b88 (Auto-commit: Agent tool execution)
           </div>
-          
-          <Button
-            type="submit"
-            disabled={!input.trim() || isLoading}
-            className="px-3 py-2 h-10"
-            style={{ backgroundColor: '#DD4B4F' }}
-          >
-            <Send className="h-4 w-4" />
-          </Button>
-        </form>
-        
+        ) : (
+          // Regular chat input after questionnaire
+          <form onSubmit={handleSubmit} className="flex gap-2">
+            <div className="flex-1 relative">
+              <textarea
+                ref={textareaRef}
+                value={input}
+                onChange={(e) => setInput(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="Type your message..."
+                disabled={isLoading}
+                className={cn(
+                  "w-full min-h-[40px] max-h-[120px] px-3 py-2 pr-10",
+                  "border border-gray-200 rounded-lg resize-none",
+                  "focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-red-400",
+                  "disabled:opacity-50 disabled:cursor-not-allowed",
+                  "placeholder:text-gray-500 text-sm"
+                )}
+                style={{ color: '#DD4B4F' }}
+                rows={1}
+              />
+
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className={`absolute right-1 top-1/2 -translate-y-1/2 h-6 w-6 transition-colors ${
+                  isVoiceRecording
+                    ? 'bg-red-100 text-red-600 hover:bg-red-200'
+                    : 'text-gray-500 hover:text-gray-700 hover:bg-gray-100'
+                }`}
+                onClick={handleVoiceInput}
+                disabled={isLoading}
+              >
+                {isVoiceRecording ? (
+                  <MicOff className="h-3 w-3" />
+                ) : (
+                  <Mic className="h-3 w-3" />
+                )}
+              </Button>
+            </div>
+
+            <Button
+              type="submit"
+              disabled={!input.trim() || isLoading}
+              className="px-3 py-2 h-10"
+              style={{ backgroundColor: '#DD4B4F' }}
+            >
+              <Send className="h-4 w-4" />
+            </Button>
+          </form>
+        )}
+
         <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-2">
             <Button
@@ -656,7 +830,7 @@ export default function ChatBot({ className }: ChatBotProps) {
               Voice
             </Button>
           </div>
-          
+
         </div>
       </div>
     </div>
