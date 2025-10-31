@@ -31,6 +31,29 @@ interface QuestionnaireAnswers {
   helpFor?: string;
 }
 
+interface Resource {
+  _id: string;
+  title: string;
+  description: string;
+  category: 'legal' | 'medical' | 'shelter' | 'psychological' | 'emergency' | 'general';
+  contactInfo: {
+    phone?: string;
+    email?: string;
+    website?: string;
+    address?: string;
+  };
+  location?: {
+    city?: string;
+    state?: string;
+    country: string;
+  };
+  severity: 'low' | 'medium' | 'high' | 'emergency';
+  languages: string[];
+  is24Hours: boolean;
+  isVerified: boolean;
+  tags: string[];
+}
+
 export default function ChatBot({ className }: ChatBotProps) {
   const [messages, setMessages] = useState<IChatMessage[]>([]);
   const [input, setInput] = useState('');
